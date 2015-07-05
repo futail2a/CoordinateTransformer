@@ -108,8 +108,8 @@ CoordinateTransformerは ``CoordinateTransformerComp`` を実行（ ``${prefix}/
 =============== =========== ============================== ====
 ポート名        ポート型    データ型                       意味
 =============== =========== ============================== ====
-SourceCoord     InPort      RTC::TimedDoubleSeq            
-DestinationCoord OutPort     RTC::TimedDoubleSeq            
+SourceCoord     InPort      RTC::TimedPose3D               
+DestinationCoord OutPort     RTC::TimedPose3D               
 =============== =========== ============================== ====
 
 例

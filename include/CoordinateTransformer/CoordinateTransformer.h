@@ -26,6 +26,8 @@
 
 // Service Consumer stub headers
 // <rtc-template block="port_stub_h">
+
+
 // </rtc-template>
 
 using namespace RTC;
@@ -36,7 +38,7 @@ using namespace RTC;
 #include <rtm/DataInPort.h>
 #include <rtm/DataOutPort.h>
 
-//©•ª‚ÌŠÂ‹«‚Å‚Í‚È‚º‚©â‘ÎƒpƒX‚Å‚È‚¢‚Æƒ[ƒh‚³‚ê‚È‚©‚Á‚½
+//è‡ªåˆ†ã®ç’°å¢ƒã§ã¯ãªãœã‹çµ¶å¯¾ãƒ‘ã‚¹ã§ãªã„ã¨ãƒ­ãƒ¼ãƒ‰ã•ã‚Œãªã‹ã£ãŸ
 #include "C:\Program Files (x86)/Eigen\include/eigen3/Eigen/Core"
 #include "C:\Program Files (x86)/Eigen\include/eigen3/Eigen/Geometry"
 //#include "Eigen/Dense"
@@ -65,11 +67,11 @@ public:
 	~CoordinateTransformer();
 
 	// <rtc-template block="public_attribute">
-
+  
 	// </rtc-template>
 
 	// <rtc-template block="public_operation">
-
+  
 	// </rtc-template>
 
 	/***
@@ -227,11 +229,11 @@ public:
 
 protected:
 	// <rtc-template block="protected_attribute">
-
+  
 	// </rtc-template>
 
 	// <rtc-template block="protected_operation">
-
+  
 	// </rtc-template>
 
 	// Configuration variable declaration
@@ -277,45 +279,45 @@ protected:
 
 	// DataInPort declaration
 	// <rtc-template block="inport_declare">
-	RTC::TimedDoubleSeq m_SourceCoord;
-	/*!
-	*/
-	InPort<RTC::TimedDoubleSeq> m_SourceCoordIn;
-
+  RTC::TimedPose3D m_SourceCoord;
+  /*!
+   */
+  InPort<RTC::TimedPose3D> m_SourceCoordIn;
+  
 	// </rtc-template>
 
 
 	// DataOutPort declaration
 	// <rtc-template block="outport_declare">
-	RTC::TimedDoubleSeq m_DestinationCoord;
-	/*!
-	*/
-	OutPort<RTC::TimedDoubleSeq> m_DestinationCoordOut;
-
+  RTC::TimedPose3D m_DestinationCoord;
+  /*!
+   */
+  OutPort<RTC::TimedPose3D> m_DestinationCoordOut;
+  
 	// </rtc-template>
 
 	// CORBA Port declaration
 	// <rtc-template block="corbaport_declare">
-
+  
 	// </rtc-template>
 
 	// Service declaration
 	// <rtc-template block="service_declare">
-
+  
 	// </rtc-template>
 
 	// Consumer declaration
 	// <rtc-template block="consumer_declare">
-
+  
 	// </rtc-template>
 
 private:
 	// <rtc-template block="private_attribute">
-
+  
 	// </rtc-template>
 
 	// <rtc-template block="private_operation">
-
+  
 	// </rtc-template>
 	Vector3d m_InputV;
 	Vector3d m_OutputV;

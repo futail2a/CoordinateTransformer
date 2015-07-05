@@ -116,8 +116,8 @@ The ports provided by the component are described below:
 =============== =========== ============================== =======
 Name            Type        Data type                      Purpose
 =============== =========== ============================== =======
-SourceCoord     InPort      RTC::TimedDoubleSeq            
-DestinationCoord OutPort     RTC::TimedDoubleSeq            
+SourceCoord     InPort      RTC::TimedPose3D               
+DestinationCoord OutPort     RTC::TimedPose3D               
 =============== =========== ============================== =======
 
 Examples

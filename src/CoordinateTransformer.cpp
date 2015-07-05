@@ -12,18 +12,18 @@
 // Module specification
 // <rtc-template block="module_spec">
 static const char* coordinatetransformer_spec[] =
-{
-	"implementation_id", "CoordinateTransformer",
-	"type_name", "CoordinateTransformer",
-	"description", "ModuleDescription",
-	"version", "1.0.0",
-	"vendor", "VenderName",
-	"category", "Category",
-	"activity_type", "PERIODIC",
-	"kind", "DataFlowComponent",
-	"max_instance", "1",
-	"language", "C++",
-	"lang_type", "compile",
+  {
+    "implementation_id", "CoordinateTransformer",
+    "type_name",         "CoordinateTransformer",
+    "description",       "ModuleDescription",
+    "version",           "1.0.0",
+    "vendor",            "VenderName",
+    "category",          "Category",
+    "activity_type",     "PERIODIC",
+    "kind",              "DataFlowComponent",
+    "max_instance",      "1",
+    "language",          "C++",
+    "lang_type",         "compile",
 	// Configuration variables
 	"conf.default.transX", "0",
 	"conf.default.transY", "0",
@@ -50,9 +50,9 @@ static const char* coordinatetransformer_spec[] =
 */
 CoordinateTransformer::CoordinateTransformer(RTC::Manager* manager)
 // <rtc-template block="initializer">
-: RTC::DataFlowComponentBase(manager),
-m_SourceCoordIn("SourceCoord", m_SourceCoord),
-m_DestinationCoordOut("DestinationCoord", m_DestinationCoord)
+  : RTC::DataFlowComponentBase(manager),
+    m_SourceCoordIn("SourceCoord", m_SourceCoord),
+    m_DestinationCoordOut("DestinationCoord", m_DestinationCoord)
 
 // </rtc-template>
 {
@@ -71,18 +71,18 @@ RTC::ReturnCode_t CoordinateTransformer::onInitialize()
 {
 	// Registration: InPort/OutPort/Service
 	// <rtc-template block="registration">
-	// Set InPort buffers
-	addInPort("SourceCoord", m_SourceCoordIn);
-
-	// Set OutPort buffer
-	addOutPort("DestinationCoord", m_DestinationCoordOut);
-
-	// Set service provider to Ports
-
-	// Set service consumers to Ports
-
-	// Set CORBA Service Ports
-
+  // Set InPort buffers
+  addInPort("SourceCoord", m_SourceCoordIn);
+  
+  // Set OutPort buffer
+  addOutPort("DestinationCoord", m_DestinationCoordOut);
+  
+  // Set service provider to Ports
+  
+  // Set service consumers to Ports
+  
+  // Set CORBA Service Ports
+  
 	// </rtc-template>
 
 	// <rtc-template block="bind_config">
@@ -126,17 +126,17 @@ RTC::ReturnCode_t CoordinateTransformer::onActivated(RTC::UniqueId ec_id)
 	m_InputV << 0, 0, 0;
 	m_OutputV << 0, 0, 0;
 
-	//deg Ë rad
+	//deg â‡’ rad
 	m_rotX = m_rotX* M_PI / 180.0;
 	m_rotY = m_rotY* M_PI / 180.0;
 	m_rotZ = m_rotZ* M_PI / 180.0;
 
-	//ŠeŽ²‰ñ“]ƒNƒI[ƒ^ƒjƒIƒ“
+	//å„è»¸å›žè»¢ã‚¯ã‚ªãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
 	m_qX = AngleAxisd(m_rotX, Vector3d::UnitX());
 	m_qY = AngleAxisd(m_rotY, Vector3d::UnitY());
 	m_qZ = AngleAxisd(m_rotZ, Vector3d::UnitZ());
 
-	//•½sˆÚ“®
+	//å¹³è¡Œç§»å‹•
 	m_trans = Translation3d(m_transX, m_transY, m_transZ);
 
 	m_DestinationCoord.data.length(3);
@@ -158,15 +158,15 @@ RTC::ReturnCode_t CoordinateTransformer::onExecute(RTC::UniqueId ec_id)
 		m_SourceCoordIn.read();
 		m_InputV << m_SourceCoord.data[0], m_SourceCoord.data[1], m_SourceCoord.data[2];
 
-		//•½sˆÚ“®
+		//å¹³è¡Œç§»å‹•
 		m_OutputV = m_trans *  m_InputV;
 
-		//XËYËZ‡‚É‰ñ“]
+		//Xâ‡’Yâ‡’Zé †ã«å›žè»¢
 		m_OutputV = m_qX * m_OutputV;
 		m_OutputV = m_qY * m_OutputV;
 		m_OutputV = m_qZ * m_OutputV;
 
-		//ƒoƒbƒtƒ@‚É‘‚«ž‚Ý
+		//ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã¿
 		m_DestinationCoord.data[0] = floor(m_OutputV(0) * 1000) / 1000;
 		m_DestinationCoord.data[1] = floor(m_OutputV(1) * 1000) / 1000;
 		m_DestinationCoord.data[2] = floor(m_OutputV(2) * 1000) / 1000;
