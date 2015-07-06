@@ -139,7 +139,6 @@ RTC::ReturnCode_t CoordinateTransformer::onActivated(RTC::UniqueId ec_id)
 	//平行移動
 	m_trans = Translation3d(m_transX, m_transY, m_transZ);
 
-	m_DestinationCoord.data.length(3);
 	return RTC::RTC_OK;
 }
 
@@ -156,7 +155,7 @@ RTC::ReturnCode_t CoordinateTransformer::onExecute(RTC::UniqueId ec_id)
 {
 	if (m_SourceCoordIn.isNew()){
 		m_SourceCoordIn.read();
-		m_InputV << m_SourceCoord.data[0], m_SourceCoord.data[1], m_SourceCoord.data[2];
+		m_InputV << m_SourceCoord.data.position.x, m_SourceCoord.data.position.y, m_SourceCoord.data.position.z;
 
 		//平行移動
 		m_OutputV = m_trans *  m_InputV;
@@ -167,9 +166,9 @@ RTC::ReturnCode_t CoordinateTransformer::onExecute(RTC::UniqueId ec_id)
 		m_OutputV = m_qZ * m_OutputV;
 
 		//バッファに書き込み
-		m_DestinationCoord.data[0] = floor(m_OutputV(0) * 1000) / 1000;
-		m_DestinationCoord.data[1] = floor(m_OutputV(1) * 1000) / 1000;
-		m_DestinationCoord.data[2] = floor(m_OutputV(2) * 1000) / 1000;
+		m_DestinationCoord.data.position.x = floor(m_OutputV(0) * 1000) / 1000;
+		m_DestinationCoord.data.position.y = floor(m_OutputV(1) * 1000) / 1000;
+		m_DestinationCoord.data.position.z = floor(m_OutputV(2) * 1000) / 1000;
 
 		m_DestinationCoordOut.write();
 	}
