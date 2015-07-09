@@ -28,20 +28,34 @@ static const char* coordinatetransformer_spec[] =
 	"conf.default.transX", "0",
 	"conf.default.transY", "0",
 	"conf.default.transZ", "0",
-	//rename rot_deg
-	"conf.default.rotX", "0",
-	"conf.default.rotY", "0",
-	"conf.default.rotZ", "0",
+	"conf.default.rot_degX", "0",
+	"conf.default.rot_degY", "0",
+	"conf.default.rot_degZ", "0",
+	"conf.default.scaleX", "1",
+	"conf.default.scaleY", "1",
+	"conf.default.scaleZ", "1",
+	"conf.default.mirrorXY", "false",
+	"conf.default.mirrorYZ", "false",
+	"conf.default.mirrorZX", "false",
 	// Widget
 	"conf.__widget__.transX", "text",
 	"conf.__widget__.transY", "text",
 	"conf.__widget__.transZ", "text",
-	"conf.__widget__.rotX", "text",
-	"conf.__widget__.rotY", "text",
-	"conf.__widget__.rotZ", "text",
+	"conf.__widget__.rot_degX", "text",
+	"conf.__widget__.rot_degY", "text",
+	"conf.__widget__.rot_degZ", "text",
+	"conf.__widget__.scaleX", "text",
+	"conf.__widget__.scaleY", "text",
+	"conf.__widget__.scaleZ", "text",
+	"conf.__widget__.mirrorXY", "radio",
+	"conf.__widget__.mirrorYZ", "radio",
+	"conf.__widget__.mirrorZX", "radio",
 	// Constraints
+	"conf.__constraints__.mirrorXY","(true,false)",
+	"conf.__constraints__.mirrorYZ","(true,false)",
+	"conf.__constraints__.mirrorZX","(true,false)",
 	""
-};
+}; 
 // </rtc-template>
 
 /*!
@@ -90,9 +104,15 @@ RTC::ReturnCode_t CoordinateTransformer::onInitialize()
 	bindParameter("transX", m_transX, "0");
 	bindParameter("transY", m_transY, "0");
 	bindParameter("transZ", m_transZ, "0");
-	bindParameter("rotX", m_rotX, "0");
-	bindParameter("rotY", m_rotY, "0");
-	bindParameter("rotZ", m_rotZ, "0");
+	bindParameter("rot_degX", m_rot_degX, "0");
+	bindParameter("rot_degY", m_rot_degY, "0");
+	bindParameter("rot_degZ", m_rot_degZ, "0");
+	bindParameter("conf.default.scaleX", m_scaleX, "1");
+	bindParameter("conf.default.scaleY", m_scaleY, "1");
+	bindParameter("conf.default.scaleZ", m_scaleZ, "1");
+	bindParameter("conf.default.mirrorXY", m_mirrorXY, "false");
+	bindParameter("conf.default.mirrorYZ", m_mirrorYZ, "false");
+	bindParameter("conf.default.mirrorZX", m_mirrorZX, "false");
 	// </rtc-template>
 
 	return RTC::RTC_OK;
@@ -127,17 +147,26 @@ RTC::ReturnCode_t CoordinateTransformer::onActivated(RTC::UniqueId ec_id)
 	m_OutputV << 0, 0, 0;
 
 	//deg ⇒ rad
-	m_rotX = m_rotX* M_PI / 180.0;
-	m_rotY = m_rotY* M_PI / 180.0;
-	m_rotZ = m_rotZ* M_PI / 180.0;
+	m_rot_degX = m_rot_degX* M_PI / 180.0;
+	m_rot_degY = m_rot_degY* M_PI / 180.0;
+	m_rot_degZ = m_rot_degZ* M_PI / 180.0;
 
 	//各軸回転クオータニオン
-	m_qX = AngleAxisd(m_rotX, Vector3d::UnitX());
-	m_qY = AngleAxisd(m_rotY, Vector3d::UnitY());
-	m_qZ = AngleAxisd(m_rotZ, Vector3d::UnitZ());
+	m_qX = AngleAxisd(m_rot_degX, Vector3d::UnitX());
+	m_qY = AngleAxisd(m_rot_degY, Vector3d::UnitY());
+	m_qZ = AngleAxisd(m_rot_degZ, Vector3d::UnitZ());
 
 	//平行移動
 	m_trans = Translation3d(m_transX, m_transY, m_transZ);
+	if (m_mirrorXY){
+		m_scaleZ *= -1;
+	}
+	if (m_mirrorYZ){
+		m_scaleX *= -1;
+	}
+	if (m_mirrorZX){
+		m_scaleY *= -1;
+	}
 
 	return RTC::RTC_OK;
 }
@@ -165,10 +194,10 @@ RTC::ReturnCode_t CoordinateTransformer::onExecute(RTC::UniqueId ec_id)
 		m_OutputV = m_qY * m_OutputV;
 		m_OutputV = m_qZ * m_OutputV;
 
-		//バッファに書き込み
-		m_DestinationCoord.data.position.x = floor(m_OutputV(0) * 1000) / 1000;
-		m_DestinationCoord.data.position.y = floor(m_OutputV(1) * 1000) / 1000;
-		m_DestinationCoord.data.position.z = floor(m_OutputV(2) * 1000) / 1000;
+		//各軸拡大縮小してバッファに書き込み
+		m_DestinationCoord.data.position.x = m_OutputV(0) * m_scaleX;
+		m_DestinationCoord.data.position.y = m_OutputV(1) * m_scaleY;
+		m_DestinationCoord.data.position.z = m_OutputV(2) * m_scaleZ;
 
 		m_DestinationCoordOut.write();
 	}

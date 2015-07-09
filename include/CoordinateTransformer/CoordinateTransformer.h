@@ -261,19 +261,27 @@ protected:
 	* - Name:  rotX
 	* - DefaultValue: 0
 	*/
-	double m_rotX;
+	double m_rot_degX;
 	/*!
 	*
 	* - Name:  rotY
 	* - DefaultValue: 0
 	*/
-	double m_rotY;
+	double m_rot_degY;
 	/*!
 	*
 	* - Name:  rotZ
 	* - DefaultValue: 0
 	*/
-	double m_rotZ;
+	double m_rot_degZ;
+
+	double m_scaleX;
+	double m_scaleY;
+	double m_scaleZ;
+	bool  m_mirrorXY;
+	bool  m_mirrorYZ;
+	bool  m_mirrorZX;
+
 
 	// </rtc-template>
 
