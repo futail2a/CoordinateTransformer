@@ -189,10 +189,10 @@ RTC::ReturnCode_t CoordinateTransformer::onExecute(RTC::UniqueId ec_id)
 		//平行移動
 		m_OutputV = m_trans *  m_InputV;
 
-		//X⇒Y⇒Z順に回転
-		m_OutputV = m_qX * m_OutputV;
-		m_OutputV = m_qY * m_OutputV;
+		//Z⇒Y⇒X順に回転
 		m_OutputV = m_qZ * m_OutputV;
+		m_OutputV = m_qY * m_OutputV;
+		m_OutputV = m_qX * m_OutputV;
 
 		//各軸拡大縮小してバッファに書き込み
 		m_DestinationCoord.data.position.x = m_OutputV(0) * m_scaleX;
